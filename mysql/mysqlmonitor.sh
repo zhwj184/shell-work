@@ -9,6 +9,20 @@ mysqladmin -u sky -ppwd -h localhost status
 #获取数据库当前的连接信息
 mysqladmin -u sky -ppwd -h localhost processlist
 
+#获取当前数据库的连接数
+mysql -u root -p123456 -BNe "select host,count(host) from processlist group by host;" information_schema
+
+#显示mysql的uptime
+mysql -e"SHOW STATUS LIKE '%uptime%'"|awk '/ptime/{ calc = $NF / 3600;print $(NF-1), calc"Hour" }'
+
+#查看数据库的大小
+mysql -u root -p123456-e 'select table_schema,round(sum(data_length+index_length)/1024/1024,4) from information_schema.tables group by table_schema;'
+
+#查看某个表的列信息
+mysql -u <user> --password=<password> -e "SHOW COLUMNS FROM <table>" <database> | awk '{print $1}' | tr "\n" "," | sed 's/,$//g'
+
+#执行mysql脚本
+mysql -u user-name -p password < script.sql
 
 #mysql dump数据导出
 mysqldump -uroot -T/tmp/mysqldump test test_outfile --fields-enclosed-by=\" --fields-terminated-by=,
